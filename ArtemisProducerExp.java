@@ -14,14 +14,6 @@ public class ArtemisProducerExp {
 
     public static void main(final String[] args) throws Exception {
 
-        //ArtemisProducer producer1 = new ArtemisProducer("Producer 1");
-        //producer1.start();
-
-        //ArtemisProducer producer2 = new ArtemisProducer("Producer 2");
-        //producer2.start();
-
-
-
         int number_of_producers = 4;
 
         for (int i=0; i < number_of_producers;i++){
