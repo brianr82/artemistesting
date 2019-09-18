@@ -117,14 +117,16 @@ class ArtemisConsumer extends Thread{
         } catch (ActiveMQException e) {
                 e.printStackTrace();
         }
-        if (counter>500){
+    
+            
+       // Commit after 500 messages     
+       if (counter>500){
 
             counter = 0;
 
-
             try {
+                //The commit
                 session.commit();
-
 
                 //*****************Log the throughput******************************
                 long windowEndTime = System.nanoTime();
