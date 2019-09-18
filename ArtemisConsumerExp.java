@@ -103,13 +103,12 @@ class ArtemisConsumer extends Thread{
         }
 
 
-
-        /////////////////////////////////
-
         int counter;
 
         @Override
         public void onMessage(ClientMessage clientMessage) {
+            
+        //We dont do anyting with the clientMessage, just keep some statistics    
         counter++;
         runningTotal++;
 
@@ -144,7 +143,7 @@ class ArtemisConsumer extends Thread{
                     currentRecordcount = currentRecordcount + 500;
                 }
 
-
+                 //****************************************************************
 
 
 
@@ -160,11 +159,12 @@ class ArtemisConsumer extends Thread{
 
     public void run(){
         try {
-            Thread.sleep(20000);
-
+            //wait for the experiment to run for 60 seconds
+            Thread.sleep(1000 * 60);
+            //close the Consumer session
             session.close();
 
-
+            //Print some stats
             long experimentEndTime = System.nanoTime();
 
             long experimentRunTime = experimentEndTime - experimentStartTime;
@@ -180,105 +180,5 @@ class ArtemisConsumer extends Thread{
         }
 
     }
-
-    /*
-    @Override
-    public void run() {
-
-        // Statistics
-        long currentRecordcount = 0l;
-        long windowStartTime  = System.nanoTime();
-        long runningTotal =0l;
-        long experimentStartTime = System.nanoTime();
-
-
-        while (true) {
-
-            int exit =0;
-
-            ClientMessage incoming =null;
-
-            int batchsize = 500;
-            int i =0;
-
-            while(i < batchsize){
-                //System.out.println("Calling receive");
-                try {
-                    incoming =  consumer.receive(1);
-
-
-
-                } catch (ActiveMQException e) {
-                    e.printStackTrace();
-                }
-
-                if (incoming == null) {
-                    exit = 1 ;
-                    break;
-                }else {
-                    try {
-                        incoming.acknowledge();
-                    } catch (ActiveMQException e) {
-                        e.printStackTrace();
-                    }
-                    i++;
-                }
-
-            }
-
-
-            try {
-                session.commit();
-
-                //*****************Log the throughput******************************
-                long windowEndTime = System.nanoTime();
-                long windowDuration = windowEndTime - windowStartTime;
-
-                if (windowDuration > 1000000000l && (System.nanoTime() - experimentStartTime < 1000000000l * 300)) {
-
-                    //LOG.error("Time, Throughput, Total: {} {} {}", windowDuration, currentRecordcount,runningTotal);
-
-                    //reset the counter
-                    currentRecordcount = 0 ;
-                    windowStartTime = windowEndTime ;
-                }
-                else{
-
-                    currentRecordcount = currentRecordcount + batchsize;
-                }
-
-
-                runningTotal = runningTotal + batchsize;
-                ///////////
-
-            } catch (ActiveMQException e) {
-                e.printStackTrace();
-            }
-
-
-            if (exit ==1){
-                System.out.println("No more tuples");
-                break;
-            }
-        }
-
-        try {
-            session.close();
-
-            long experimentEndTime = System.nanoTime();
-
-            long experimentRunTime = experimentEndTime - experimentStartTime;
-
-            System.out.println("Experiment Run time: " + experimentRunTime / 1000000000l);
-            System.out.println("Throughput tuples/sec: " + runningTotal / (experimentRunTime / 1000000000l));
-
-
-        } catch (ActiveMQException e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
-
 
 }
